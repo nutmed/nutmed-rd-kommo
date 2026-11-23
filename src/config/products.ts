@@ -9,7 +9,7 @@ export type ProductRoute = {
   responsibleUserId?: number;
 };
 
-// Funil confirmado: Funil NutMed. TODO NUTMED: confirmar etapa de entrada e responsável.
+// Confirmados: Funil NutMed → NOVOS LEADS RD. TODO NUTMED: responsável (opcional).
 const pipelineName = process.env.KOMMO_PIPELINE_NAME || "Funil NutMed";
 const stageName = process.env.KOMMO_ENTRY_STAGE_NAME || "NOVOS LEADS RD";
 const responsibleUserId = positiveInteger(process.env.KOMMO_RESPONSIBLE_USER_ID || "");

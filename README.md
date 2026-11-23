@@ -14,7 +14,7 @@ Recebe conversões do RD Station Marketing e cria ou atualiza contatos e oportun
 
 | Rota / `event_identifier` | Produto | Destino |
 |---|---|---|
-| `nutmed-geral` | NUTMED | Funil NutMed → NOVOS LEADS RD (provisório) |
+| `nutmed-geral` | NUTMED | Funil NutMed → NOVOS LEADS RD |
 
 Webhook padrão: `POST /api/webhooks/rd?secret=SEGREDO`.
 
