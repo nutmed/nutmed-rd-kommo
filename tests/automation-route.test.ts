@@ -6,7 +6,7 @@ describe("rotas da NUTMED", () => {
     expect(routeForEvent("nutmed-geral")).toMatchObject({
       product: "NUTMED",
       source: "RD Station",
-      pipelineName: "Funil NUTMED",
+      pipelineName: "Funil NutMed",
       stageName: "NOVOS LEADS RD",
       tags: ["RD", "NUTMED"],
     });

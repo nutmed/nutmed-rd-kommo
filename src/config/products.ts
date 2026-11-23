@@ -9,8 +9,8 @@ export type ProductRoute = {
   responsibleUserId?: number;
 };
 
-// TODO NUTMED: confirmar nome do funil, etapa de entrada e responsável.
-const pipelineName = process.env.KOMMO_PIPELINE_NAME || "Funil NUTMED";
+// Funil confirmado: Funil NutMed. TODO NUTMED: confirmar etapa de entrada e responsável.
+const pipelineName = process.env.KOMMO_PIPELINE_NAME || "Funil NutMed";
 const stageName = process.env.KOMMO_ENTRY_STAGE_NAME || "NOVOS LEADS RD";
 const responsibleUserId = positiveInteger(process.env.KOMMO_RESPONSIBLE_USER_ID || "");
 

@@ -4,7 +4,7 @@ Recebe conversões do RD Station Marketing e cria ou atualiza contatos e oportun
 
 ## Pendências (dados da NUTMED)
 
-- [ ] Subdomínio Kommo (`KOMMO_SUBDOMAIN`) e token de longa duração.
+- [x] Subdomínio Kommo: `nutmed` (nutmed.kommo.com). [ ] Token de longa duração.
 - [ ] Funil, etapa de entrada e responsável (`KOMMO_PIPELINE_NAME`, `KOMMO_ENTRY_STAGE_NAME`, `KOMMO_RESPONSIBLE_USER_ID`).
 - [ ] Identificadores das conversões do RD → `src/config/products.ts`.
 - [ ] Mapeamento de campos e tags por formulário.
@@ -14,7 +14,7 @@ Recebe conversões do RD Station Marketing e cria ou atualiza contatos e oportun
 
 | Rota / `event_identifier` | Produto | Destino |
 |---|---|---|
-| `nutmed-geral` | NUTMED | Funil NUTMED → NOVOS LEADS RD (provisório) |
+| `nutmed-geral` | NUTMED | Funil NutMed → NOVOS LEADS RD (provisório) |
 
 Webhook padrão: `POST /api/webhooks/rd?secret=SEGREDO`.
 
