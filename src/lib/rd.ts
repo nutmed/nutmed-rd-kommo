@@ -21,6 +21,7 @@ export type ParsedRdConversion = {
   city?: string;
   state?: string;
   origin?: unknown;
+  tags: string[];
   customFields: Record<string, unknown>;
   rawKeys: string[];
 };
@@ -65,6 +66,7 @@ export function parseRdWebhook(body: unknown): ParsedRdConversion {
     city: textValue(contact.city ?? contact.cidade ?? contact.Cidade),
     state: textValue(contact.state ?? contact.estado ?? contact.Estado),
     origin: contact.origin ?? legacyOrigin(contact),
+    tags: Array.isArray(contact.tags) ? contact.tags.map((tag) => String(tag)) : [],
     customFields,
     rawKeys: Object.keys(contact).sort(),
   };

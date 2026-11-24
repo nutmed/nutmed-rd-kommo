@@ -2,6 +2,7 @@ import { routeForEvent } from "@/config/products";
 import { buildLeadCustomFields } from "@/lib/field-mapping";
 import { KommoClient } from "@/lib/kommo";
 import type { ParsedRdConversion } from "@/lib/rd";
+import { findProfileField, profileFieldValue, profileFromTags } from "@/lib/profile";
 
 export async function syncConversion(conversion: ParsedRdConversion) {
   const route = routeForEvent(conversion.eventIdentifier);
@@ -15,10 +16,14 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   if (!subdomain || !token) throw new Error("KOMMO_SUBDOMAIN ou KOMMO_LONG_LIVED_TOKEN não configurado.");
 
   const kommo = new KommoClient(token, subdomain);
+  const profile = profileFromTags(conversion.tags);
   const [{ pipelineId, statusId }, leadFields] = await Promise.all([
     kommo.resolvePipeline(route.pipelineName, route.stageName),
     kommo.getCustomFields("leads"),
   ]);
+  const leadProfileField = profile ? findProfileField(leadFields) : undefined;
+  const contactFields = profile && !leadProfileField ? await kommo.getCustomFields("contacts") : [];
+  const contactProfileField = profile && !leadProfileField ? findProfileField(contactFields) : undefined;
 
   const responsibleUserId = route.responsibleUserId;
 
@@ -26,6 +31,7 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   const utms = originFields(conversion.origin);
   const idFromCustomFields = findCustomValue(conversion.customFields, ["id da conversao", "conversion id", "id conversao"]);
   const contactMapped = emptyFieldMapping();
+  if (profile && contactProfileField) applyProfile(contactMapped, contactProfileField, profile);
   const companyMapped = emptyFieldMapping();
   const mapped = buildLeadCustomFields(leadFields, {
     product: route.product,
@@ -38,6 +44,10 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     ...utms,
     custom: conversion.customFields,
   });
+  if (profile && leadProfileField) applyProfile(mapped, leadProfileField, profile);
+  if (profile && !leadProfileField && !contactProfileField) {
+    mapped.warnings.push("Campo \"Você é\" não encontrado na Kommo (oportunidade nem contato).");
+  }
 
   let contact = await kommo.findContact(conversion.phone, conversion.email);
   if (contact) {
@@ -139,4 +149,19 @@ function emptyFieldMapping(): ReturnType<typeof buildLeadCustomFields> {
     mappedFields: [],
     warnings: [],
   };
+}
+
+function applyProfile(
+  target: ReturnType<typeof buildLeadCustomFields>,
+  field: Parameters<typeof profileFieldValue>[0],
+  profile: Parameters<typeof profileFieldValue>[1],
+) {
+  const value = profileFieldValue(field, profile);
+  if (!value) {
+    target.warnings.push(`Perfil sem opção correspondente em ${field.name}: ${profile.label}`);
+    return;
+  }
+  target.fields = target.fields.filter((item) => item.field_id !== field.id);
+  target.fields.push(value);
+  target.mappedFields.push({ id: field.id, name: field.name, type: field.type });
 }
