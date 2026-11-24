@@ -25,6 +25,13 @@ export const productRoutes: Record<string, ProductRoute> = {
     stageName,
     tags: ["RD", "NUTMED"],
   },
+  "lp-pos-nutricao-de-precisao": {
+    product: "Pós Nutrição de Precisão",
+    source: "Landing Page",
+    pipelineName,
+    stageName,
+    tags: ["RD", "LP", "Pós Nutrição de Precisão"],
+  },
 };
 
 export function routeForEvent(eventIdentifier: string): ProductRoute | undefined {
