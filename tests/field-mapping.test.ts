@@ -36,6 +36,16 @@ describe("mapeamento dos campos da oportunidade", () => {
     expect(result.warnings).toContain("Campo RD sem correspondente na Kommo: cf_campo_inexistente");
   });
 
+  it("preenche o campo Curso com o nome do produto da rota", () => {
+    const result = buildLeadCustomFields([{ id: 20, name: "Curso", type: "text" }], {
+      product: "Pós Nutrição de Precisão",
+      source: "Landing Page",
+      event: "lp-pos-nutricao-de-precisao",
+      custom: {},
+    });
+    expect(result.fields).toContainEqual({ field_id: 20, values: [{ value: "Pós Nutrição de Precisão" }] });
+  });
+
   it("mapeia campos nomeados", () => {
     const result = buildNamedCustomFields([{ id: 1, name: "Cidade", type: "text" }], [
       { names: ["Cidade"], value: "Curitiba" },

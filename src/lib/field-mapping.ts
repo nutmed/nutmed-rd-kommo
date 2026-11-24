@@ -2,7 +2,7 @@ import type { KommoCustomField, KommoFieldValue } from "@/lib/kommo-types";
 import { normalizeText } from "@/lib/normalize";
 
 const aliases: Record<string, string[]> = {
-  product: ["Produto", "Produto de interesse"],
+  product: ["Curso", "Curso de interesse", "Produto", "Produto de interesse"],
   source: ["Canal de entrada", "Origem da conversão", "Fonte do lead"],
   rdOrigin: ["Origem RD", "Origem de marketing"],
   event: ["Evento RD", "Converteu no evento", "Identificador do evento"],
