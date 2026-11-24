@@ -30,7 +30,7 @@ export const productRoutes: Record<string, ProductRoute> = {
     source: "Landing Page",
     pipelineName,
     stageName,
-    tags: ["RD", "LP", "Pós Nutrição de Precisão"],
+    tags: ["Pós Nutrição de Precisão"],
   },
 };
 

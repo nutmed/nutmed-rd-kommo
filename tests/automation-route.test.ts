@@ -18,7 +18,7 @@ describe("rotas da NUTMED", () => {
       source: "Landing Page",
       pipelineName: "Funil NutMed",
       stageName: "NOVOS LEADS RD",
-      tags: ["RD", "LP", "Pós Nutrição de Precisão"],
+      tags: ["Pós Nutrição de Precisão"],
     });
   });
 
