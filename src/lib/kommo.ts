@@ -66,6 +66,17 @@ export class KommoClient {
     return { pipelineId: pipeline.id, statusId: stage.id };
   }
 
+  async getUsers(): Promise<Array<{ id: number; name: string; active?: boolean }>> {
+    const data = await this.request<Collection<{ id: number; name: string; rights?: { is_active?: boolean } }>>(
+      "/users?limit=250", {}, 0, "consultar usuários",
+    );
+    return (data?._embedded?.users ?? []).map((user) => ({
+      id: user.id,
+      name: user.name,
+      active: user.rights?.is_active,
+    }));
+  }
+
   async getCustomFields(entity: "leads" | "contacts" | "companies"): Promise<KommoCustomField[]> {
     const data = await this.request<Collection<KommoCustomField>>(`/${entity}/custom_fields?limit=250`, {}, 0, `consultar campos de ${entity}`);
     return data?._embedded?.custom_fields ?? [];

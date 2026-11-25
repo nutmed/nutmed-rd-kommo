@@ -2,6 +2,7 @@ import { routeForEvent } from "@/config/products";
 import { buildLeadCustomFields } from "@/lib/field-mapping";
 import { KommoClient } from "@/lib/kommo";
 import type { ParsedRdConversion } from "@/lib/rd";
+import { chooseResponsible } from "@/lib/distribution";
 import { findProfileField, profileFieldValue, profileFromTags } from "@/lib/profile";
 
 export async function syncConversion(conversion: ParsedRdConversion) {
@@ -25,7 +26,16 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   const contactFields = profile && !leadProfileField ? await kommo.getCustomFields("contacts") : [];
   const contactProfileField = profile && !leadProfileField ? findProfileField(contactFields) : undefined;
 
-  const responsibleUserId = route.responsibleUserId;
+  const distributionWarnings: string[] = [];
+  let responsibleUserId = route.responsibleUserId;
+  if (!responsibleUserId) {
+    const { user, missing } = chooseResponsible(
+      await kommo.getUsers(),
+      conversion.phone || conversion.email || conversion.name,
+    );
+    responsibleUserId = user?.id;
+    if (missing.length) distributionWarnings.push(`Vendedor não encontrado na Kommo: ${missing.join(", ")}`);
+  }
 
   const origin = readableOrigin(conversion.origin);
   const utms = originFields(conversion.origin);
@@ -45,6 +55,7 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     custom: conversion.customFields,
   });
   if (profile && leadProfileField) applyProfile(mapped, leadProfileField, profile);
+  mapped.warnings.push(...distributionWarnings);
   if (profile && !leadProfileField && !contactProfileField) {
     mapped.warnings.push("Campo \"Você é\" não encontrado na Kommo (oportunidade nem contato).");
   }

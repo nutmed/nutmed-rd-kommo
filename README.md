@@ -30,6 +30,7 @@ Saúde: `GET /api/health`.
 - Uma oportunidade aberta do mesmo produto no mesmo funil é atualizada; sem ela, uma nova é criada na etapa de entrada.
 - Funil, etapa e campos personalizados são localizados pelo nome; campos ausentes geram aviso sem bloquear o lead.
 - UTMs e origem do RD vão para os campos `UTM_*`, `Origem RD`, `Evento RD` etc., quando existirem na Kommo.
+- Novos leads são divididos por porcentagem entre vendedores (padrão: Darlene 43%, Fernando 43%, Bárbara 14%), procurados pelo nome na Kommo. Ajuste pela variável `KOMMO_DISTRIBUTION` (ex.: `Darlene:43,Fernando:43,Bárbara:14`). O mesmo contato sempre cai com a mesma pessoa; oportunidades já abertas mantêm o responsável.
 - O campo `Curso` da Kommo recebe o nome do curso da rota (ex.: Pós Nutrição de Precisão).
 - O campo "Você é" (oportunidade ou contato) é preenchido a partir da tag `perfil-<valor>` que a LP envia ao RD.
 - Os logs não registram nome, e-mail, telefone nem valores dos campos.
