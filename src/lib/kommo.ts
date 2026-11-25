@@ -129,6 +129,13 @@ export class KommoClient {
     }, 0, "atualizar contato");
   }
 
+  async setContactResponsible(id: number, responsibleUserId: number): Promise<void> {
+    await this.request(`/contacts/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ responsible_user_id: responsibleUserId }),
+    }, 0, "trocar responsável do contato");
+  }
+
   async findOrCreateCompany(name: string, customFields: KommoFieldValue[] = []): Promise<KommoCompany> {
     const normalizedName = normalizeText(name);
     const data = await this.request<Collection<KommoCompany>>(

@@ -109,6 +109,10 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     tags: route.tags,
     customFields: mapped.fields,
   });
+  // Mantém o contato com o mesmo vendedor do lead novo (igual ao "all contacts" do robô da Kommo).
+  if (responsibleUserId && contact.responsible_user_id !== responsibleUserId) {
+    await kommo.setContactResponsible(contact.id, responsibleUserId);
+  }
   return {
     status: "created" as const,
     contactId: contact.id,

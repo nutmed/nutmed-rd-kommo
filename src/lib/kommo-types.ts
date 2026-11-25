@@ -24,6 +24,7 @@ export type KommoLead = {
 export type KommoContact = {
   id: number;
   name: string;
+  responsible_user_id?: number;
   custom_fields_values?: KommoFieldValue[] | null;
   _embedded?: { leads?: Array<{ id: number }> };
 };
