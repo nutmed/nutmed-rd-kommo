@@ -103,7 +103,7 @@ export class KommoClient {
     const data = await this.request<Collection<KommoContact>>("/contacts", {
       method: "POST",
       body: JSON.stringify([{
-        name,
+        ...contactNameFields(name),
         custom_fields_values: customFields,
         ...(responsibleUserId ? { responsible_user_id: responsibleUserId } : {}),
       }]),
@@ -123,7 +123,7 @@ export class KommoClient {
     await this.request(`/contacts/${id}`, {
       method: "PATCH",
       body: JSON.stringify({
-        name,
+        ...contactNameFields(name),
         custom_fields_values: [...contactFieldValues(phone, email), ...extraCustomFields],
       }),
     }, 0, "atualizar contato");
@@ -289,4 +289,11 @@ function contactMatches(contact: KommoContact, phone?: string, email?: string): 
     }
   }
   return false;
+}
+
+// Separa "Ana Paula Souza" em Nome "Ana" e Sobrenome "Paula Souza", para mensagens usarem só o primeiro nome.
+export function contactNameFields(fullName: string): { name: string; first_name: string; last_name: string } {
+  const name = fullName.replace(/\s+/g, " ").trim();
+  const [first = "", ...rest] = name.split(" ");
+  return { name, first_name: first, last_name: rest.join(" ") };
 }
