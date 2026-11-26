@@ -35,11 +35,13 @@ export const productRoutes: Record<string, ProductRoute> = {
   "lp-pos-nutricao-clinica": lpRoute("Pós Nutrição Clínica Ambulatorial e Hospitalar"),
   "lp-pos-nutricao-esportiva": lpRoute("Pós Nutrição Esportiva"),
   "lp-pos-nutricao-materno-infantil": lpRoute("Pós Nutrição Materno Infantil"),
+  "lp-pos-nutricao-oncologia": lpRoute("Pós Nutrição em Oncologia"),
   // Mesmos cursos pelo identificador da conversão no RD (webhook padrão de conversão).
   "Pós Nutrição de Precisão Funcional e Fitoterapia": lpRoute("Pós Nutrição de Precisão Funcional e Fitoterapia"),
   "Pós Nutrição Clínica Ambulatorial e Hospitalar": lpRoute("Pós Nutrição Clínica Ambulatorial e Hospitalar"),
   "Pós Nutrição Esportiva": lpRoute("Pós Nutrição Esportiva"),
   "Pós Nutrição Materno Infantil": lpRoute("Pós Nutrição Materno Infantil"),
+  "Pós Nutrição em Oncologia": lpRoute("Pós Nutrição em Oncologia"),
 };
 
 export function routeForEvent(eventIdentifier: string): ProductRoute | undefined {
