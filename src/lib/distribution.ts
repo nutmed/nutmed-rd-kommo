@@ -49,11 +49,19 @@ export function matchUser(users: KommoUserSummary[], name: string): KommoUserSum
     ?? active.find((user) => normalizeText(user.name).split(" ")[0] === wanted.split(" ")[0]);
 }
 
-export function chooseResponsible(users: KommoUserSummary[], contactKey: string, entries = parseDistribution()) {
+// Se o contato já é de um dos vendedores da divisão, o lead novo fica com ele (pedido do Rodrigo, 26/11/2026).
+export function chooseResponsible(
+  users: KommoUserSummary[],
+  contactKey: string,
+  entries = parseDistribution(),
+  currentOwnerId?: number,
+) {
   const resolved = entries
     .map((entry) => ({ ...entry, user: matchUser(users, entry.name) }))
     .filter((entry): entry is DistributionEntry & { user: KommoUserSummary } => Boolean(entry.user));
   const missing = entries.filter((entry) => !resolved.some((item) => item.name === entry.name)).map((entry) => entry.name);
+  const owner = currentOwnerId ? resolved.find((entry) => entry.user.id === currentOwnerId) : undefined;
+  if (owner) return { user: owner.user, missing, kept: true };
   const chosen = pickByWeight(resolved, bucketFor(contactKey));
-  return { user: chosen?.user, missing };
+  return { user: chosen?.user, missing, kept: false };
 }

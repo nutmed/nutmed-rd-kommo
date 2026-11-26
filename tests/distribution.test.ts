@@ -47,6 +47,22 @@ describe("divisão dos leads por porcentagem", () => {
     expect(count[3] / 10000).toBeLessThan(0.17);
   });
 
+  it("mantém o vendedor que já atende o contato", () => {
+    for (const owner of [1, 2, 3]) {
+      for (let i = 0; i < 50; i += 1) {
+        const result = chooseResponsible(users, `+5541${i}`, undefined, owner);
+        expect(result.user!.id).toBe(owner);
+        expect(result.kept).toBe(true);
+      }
+    }
+  });
+
+  it("sorteia quando o dono do contato não está na divisão", () => {
+    const result = chooseResponsible(users, "+5541999", undefined, 99);
+    expect(result.kept).toBe(false);
+    expect([1, 2, 3]).toContain(result.user!.id);
+  });
+
   it("avisa quando um nome não existe na Kommo", () => {
     expect(chooseResponsible(users.slice(0, 2), "x").missing).toEqual(["Bárbara"]);
   });

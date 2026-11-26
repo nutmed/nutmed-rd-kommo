@@ -26,12 +26,16 @@ export async function syncConversion(conversion: ParsedRdConversion) {
   const contactFields = profile && !leadProfileField ? await kommo.getCustomFields("contacts") : [];
   const contactProfileField = profile && !leadProfileField ? findProfileField(contactFields) : undefined;
 
+  let contact = await kommo.findContact(conversion.phone, conversion.email);
+
   const distributionWarnings: string[] = [];
   let responsibleUserId = route.responsibleUserId;
   if (!responsibleUserId) {
     const { user, missing } = chooseResponsible(
       await kommo.getUsers(),
       conversion.phone || conversion.email || conversion.name,
+      undefined,
+      contact?.responsible_user_id,
     );
     responsibleUserId = user?.id;
     if (missing.length) distributionWarnings.push(`Vendedor não encontrado na Kommo: ${missing.join(", ")}`);
@@ -60,7 +64,6 @@ export async function syncConversion(conversion: ParsedRdConversion) {
     mapped.warnings.push("Campo \"Você é\" não encontrado na Kommo (oportunidade nem contato).");
   }
 
-  let contact = await kommo.findContact(conversion.phone, conversion.email);
   if (contact) {
     await kommo.updateContact(
       contact.id,
