@@ -89,6 +89,18 @@ export function unwrapRdAutomationPayload(body: Record<string, unknown>): Record
   return flattened;
 }
 
+// Nome da última conversão no envelope legado das automações do RD
+// (last_conversion.content.identificador). Permite usar uma automação só para várias LPs.
+export function lastConversionIdentifier(contact: Record<string, unknown>): string | undefined {
+  const conversion = contact.last_conversion;
+  if (!conversion || typeof conversion !== "object" || Array.isArray(conversion)) return undefined;
+  const data = conversion as Record<string, unknown>;
+  const content = data.content && typeof data.content === "object" && !Array.isArray(data.content)
+    ? data.content as Record<string, unknown>
+    : {};
+  return textValue(content.identificador) ?? textValue(content.conversion_identifier) ?? textValue(data.conversion_identifier);
+}
+
 export function sanitizedReceipt(conversion: ParsedRdConversion) {
   return {
     eventIdentifier: conversion.eventIdentifier,

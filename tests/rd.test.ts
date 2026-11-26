@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseRdWebhook, sanitizedReceipt, unwrapRdAutomationPayload } from "../src/lib/rd";
+import { lastConversionIdentifier, parseRdWebhook, sanitizedReceipt, unwrapRdAutomationPayload } from "../src/lib/rd";
 
 describe("payload do RD", () => {
   it("extrai contato e campos personalizados sem expor valores no recibo", () => {
@@ -56,6 +56,17 @@ describe("payload do RD", () => {
     expect(parsed.phone).toBe("+5541988797301");
     expect(parsed.origin).toBe("Tráfego Direto");
     expect(parsed.customFields.cf_quantas_unidades_possui).toBe("4 a 10");
+  });
+
+  it("lê o nome da última conversão no envelope das automações", () => {
+    const contact = unwrapRdAutomationPayload({
+      leads: [{
+        email: "teste@exemplo.com",
+        last_conversion: { content: { identificador: "Pós Nutrição Esportiva" }, source: "Google" },
+      }],
+    });
+    expect(lastConversionIdentifier(contact)).toBe("Pós Nutrição Esportiva");
+    expect(lastConversionIdentifier({ last_conversion: { source: "x" } })).toBeUndefined();
   });
 
   it("extrai cidade e estado padrão para os dados da empresa", () => {

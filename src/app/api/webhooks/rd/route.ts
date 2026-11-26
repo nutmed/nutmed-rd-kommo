@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parseRdWebhook, sanitizedReceipt, unwrapRdAutomationPayload } from "@/lib/rd";
+import { lastConversionIdentifier, parseRdWebhook, sanitizedReceipt, unwrapRdAutomationPayload } from "@/lib/rd";
+import { routeForEvent } from "@/config/products";
 import { syncConversion } from "@/lib/sync";
 import { KommoError, safeKommoErrorDetail } from "@/lib/kommo";
 
@@ -43,10 +44,12 @@ export async function handleRdWebhook(
 
     if (!isStandardWebhook && automationRoute) {
       const contact = unwrapRdAutomationPayload(record);
+      const conversionName = lastConversionIdentifier(contact);
       body = {
         event_type: "RD_AUTOMATION",
         entity_type: "CONTACT",
-        event_identifier: automationRoute,
+        // O curso vem da conversão quando ela é conhecida; senão, da rota da URL.
+        event_identifier: conversionName && routeForEvent(conversionName) ? conversionName : automationRoute,
         event_timestamp: new Date().toISOString(),
         contact,
       };
