@@ -12,13 +12,20 @@ describe("rotas da NUTMED", () => {
     });
   });
 
-  it("envia a LP da Pós Nutrição de Precisão para o Funil NutMed", () => {
-    expect(routeForEvent("lp-pos-nutricao-de-precisao")).toMatchObject({
-      product: "Pós Nutrição de Precisão",
+  it.each([
+    ["lp-pos-nutricao-de-precisao", "Pós Nutrição de Precisão Funcional e Fitoterapia"],
+    ["lp-pos-nutricao-clinica", "Pós Nutrição Clínica Ambulatorial e Hospitalar"],
+    ["lp-pos-nutricao-esportiva", "Pós Nutrição Esportiva"],
+    ["Pós Nutrição de Precisão Funcional e Fitoterapia", "Pós Nutrição de Precisão Funcional e Fitoterapia"],
+    ["Pós Nutrição Clínica Ambulatorial e Hospitalar", "Pós Nutrição Clínica Ambulatorial e Hospitalar"],
+    ["Pós Nutrição Esportiva", "Pós Nutrição Esportiva"],
+  ])("envia %s para o Funil NutMed como %s", (event, product) => {
+    expect(routeForEvent(event)).toMatchObject({
+      product,
       source: "Landing Page",
       pipelineName: "Funil NutMed",
       stageName: "NOVOS LEADS RD",
-      tags: ["Pós Nutrição de Precisão"],
+      tags: [product],
     });
   });
 

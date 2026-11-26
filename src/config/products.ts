@@ -17,6 +17,11 @@ const responsibleUserId = positiveInteger(process.env.KOMMO_RESPONSIBLE_USER_ID 
 // TODO NUTMED: cadastrar aqui os identificadores reais das conversões do RD.
 // A chave é o event_identifier do RD ou o nome da rota usado em
 // /api/webhooks/rd/<rota>/<segredo> nas automações.
+// LP de curso: o nome do curso vira o campo Curso e a única tag (sem tags RD/LP, pedido do Rodrigo).
+function lpRoute(product: string): ProductRoute {
+  return { product, source: "Landing Page", pipelineName, stageName, tags: [product] };
+}
+
 export const productRoutes: Record<string, ProductRoute> = {
   "nutmed-geral": {
     product: "NUTMED",
@@ -25,13 +30,14 @@ export const productRoutes: Record<string, ProductRoute> = {
     stageName,
     tags: ["RD", "NUTMED"],
   },
-  "lp-pos-nutricao-de-precisao": {
-    product: "Pós Nutrição de Precisão",
-    source: "Landing Page",
-    pipelineName,
-    stageName,
-    tags: ["Pós Nutrição de Precisão"],
-  },
+  // Rotas usadas na URL do webhook das automações do RD (/api/webhooks/rd/<rota>/<segredo>).
+  "lp-pos-nutricao-de-precisao": lpRoute("Pós Nutrição de Precisão Funcional e Fitoterapia"),
+  "lp-pos-nutricao-clinica": lpRoute("Pós Nutrição Clínica Ambulatorial e Hospitalar"),
+  "lp-pos-nutricao-esportiva": lpRoute("Pós Nutrição Esportiva"),
+  // Mesmos cursos pelo identificador da conversão no RD (webhook padrão de conversão).
+  "Pós Nutrição de Precisão Funcional e Fitoterapia": lpRoute("Pós Nutrição de Precisão Funcional e Fitoterapia"),
+  "Pós Nutrição Clínica Ambulatorial e Hospitalar": lpRoute("Pós Nutrição Clínica Ambulatorial e Hospitalar"),
+  "Pós Nutrição Esportiva": lpRoute("Pós Nutrição Esportiva"),
 };
 
 export function routeForEvent(eventIdentifier: string): ProductRoute | undefined {
