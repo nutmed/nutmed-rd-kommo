@@ -16,9 +16,11 @@ describe("rotas da NUTMED", () => {
     ["lp-pos-nutricao-de-precisao", "Pós Nutrição de Precisão Funcional e Fitoterapia"],
     ["lp-pos-nutricao-clinica", "Pós Nutrição Clínica Ambulatorial e Hospitalar"],
     ["lp-pos-nutricao-esportiva", "Pós Nutrição Esportiva"],
+    ["lp-pos-nutricao-materno-infantil", "Pós Nutrição Materno Infantil"],
     ["Pós Nutrição de Precisão Funcional e Fitoterapia", "Pós Nutrição de Precisão Funcional e Fitoterapia"],
     ["Pós Nutrição Clínica Ambulatorial e Hospitalar", "Pós Nutrição Clínica Ambulatorial e Hospitalar"],
     ["Pós Nutrição Esportiva", "Pós Nutrição Esportiva"],
+    ["Pós Nutrição Materno Infantil", "Pós Nutrição Materno Infantil"],
   ])("envia %s para o Funil NutMed como %s", (event, product) => {
     expect(routeForEvent(event)).toMatchObject({
       product,
